@@ -8,6 +8,7 @@ import joblib
 
 # Load dataset
 iris = load_iris()
+print(iris)
 X = pd.DataFrame(iris.data, columns=iris.feature_names)
 y = pd.Series(iris.target)
 
