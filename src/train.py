@@ -24,5 +24,5 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f"Model accuracy: {accuracy:.2f}")
 
 # Save the trained model
-joblib.dump(model, 'model.joblib')
+joblib.dump(model, 'model/model.joblib')
 print("Model saved as 'model.joblib'")
