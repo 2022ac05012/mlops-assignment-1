@@ -1,9 +1,10 @@
-# train_model.py
-import pandas as pd
+# hyperparameter_tuning.py
+from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+import pandas as pd
 import joblib
+from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import numpy as np
 
@@ -18,15 +19,29 @@ data[5].replace(['high','med','low'], [2,1,0], inplace=True)
 data[6].replace(['vgood','good','acc','unacc'], [3,2,1,0], inplace=True)
 X = data.iloc[:, :-1]
 y = data.iloc[:, -1]
-# Split dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train a model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+# Define the model
+model = RandomForestClassifier(random_state=42)
+
+# Define hyperparameter grid
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20],
+    'min_samples_split': [2, 5, 10]
+}
+
+# Perform grid search
+grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='accuracy', verbose=1)
+grid_search.fit(X_train, y_train)
+
+# Best parameters and score
+print(f"Best parameters: {grid_search.best_params_}")
+print(f"Best score: {grid_search.best_score_:.2f}")
+best_model = grid_search.best_estimator_
 
 # Evaluate the model
-y_pred = model.predict(X_test)
+y_pred = best_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model accuracy: {accuracy:.2f}")
 
@@ -45,6 +60,7 @@ print(f"Mean Squared Error: {mse:.2f}")
 rmse = np.sqrt(mse)
 print(f"Root Mean Squared Error: {rmse:.2f}")
 
-# Save the trained model
-joblib.dump(model, 'model/model.joblib')
-print("Model saved as 'model.joblib'")
+# Save the best model
+
+joblib.dump(best_model, 'model/best_model.joblib')
+print("Best model saved as 'best_model.joblib'")
