@@ -23,7 +23,7 @@ y = data.iloc[:, -1]
 # Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42)
-mlflow.set_experiment("Random forest car evaluation")
+mlflow.set_experiment("Random forest car evaluation final")
 with mlflow.start_run():
     # Train a model
     n_estimators = 95
