@@ -10,7 +10,7 @@ import os
 
 # Test data loading and preprocessing
 def test_data_loading_and_preprocessing():
-    data = pd.read_csv('data_mock/car_evaluation.csv', header=None)
+    data = pd.read_csv('tests/data_mock/car_evaluation.csv', header=None)
     assert not data.empty, "Dataset is empty"
     assert data.shape[1] == 7, "Dataset does not have the expected number of columns"
 
@@ -28,7 +28,7 @@ def test_data_loading_and_preprocessing():
 
 # Test train-test split
 def test_train_test_split():
-    data = pd.read_csv('data_mock/car_evaluation.csv', header=None)
+    data = pd.read_csv('tests/data_mock/car_evaluation.csv', header=None)
     data[0].replace(['vhigh', 'high', 'med', 'low'], [3, 2, 1, 0], inplace=True)
     data[1].replace(['vhigh', 'high', 'med', 'low'], [3, 2, 1, 0], inplace=True)
     data[2].replace(['5more'], [5], inplace=True)
@@ -48,7 +48,7 @@ def test_train_test_split():
 
 # Test model training
 def test_model_training():
-    data = pd.read_csv('data_mock/car_evaluation.csv', header=None)
+    data = pd.read_csv('tests/data_mock/car_evaluation.csv', header=None)
     data[0].replace(['vhigh', 'high', 'med', 'low'], [3, 2, 1, 0], inplace=True)
     data[1].replace(['vhigh', 'high', 'med', 'low'], [3, 2, 1, 0], inplace=True)
     data[2].replace(['5more'], [5], inplace=True)
@@ -78,8 +78,8 @@ def test_model_training():
 # Test model saving
 def test_model_saving():
     model = RandomForestClassifier(n_estimators=95, random_state=40)
-    joblib.dump(model, 'model_mock/test_model.joblib')
+    joblib.dump(model, 'tests/model_mock/test_model.joblib')
 
-    assert os.path.exists('model_mock/test_model.joblib'), "Model file was not saved"
-    os.remove('model_mock/test_model.joblib')  # Clean up after test
+    assert os.path.exists('tests/model_mock/test_model.joblib'), "Model file was not saved"
+    os.remove('tests/model_mock/test_model.joblib')  # Clean up after test
 
