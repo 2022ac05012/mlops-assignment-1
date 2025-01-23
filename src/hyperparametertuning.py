@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import joblib
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import numpy as np
 
@@ -43,22 +43,19 @@ best_model = grid_search.best_estimator_
 # Evaluate the model
 y_pred = best_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print(f"Model accuracy: {accuracy:.2f}")
-
-r2 = r2_score(y_test, y_pred)
-print(f"R² Score: {r2:.2f}")
-
+print(f"Model accuracy: {accuracy:.2f}")   
+precision = precision_score(y_test, y_pred, average='micro')
+print(f"Precision Score: {precision:.2f}")
 # Calculate Mean Absolute Error (MAE)
-mae = mean_absolute_error(y_test, y_pred)
-print(f"Mean Absolute Error: {mae:.2f}")
+recall = recall_score(y_test, y_pred, average='micro')
+print(f"Recall score: {recall:.2f}")
 
 # Calculate Mean Squared Error (MSE)
-mse = mean_squared_error(y_test, y_pred)
-print(f"Mean Squared Error: {mse:.2f}")
+f1Score = f1_score(y_test, y_pred, average='micro')
+print(f"F1 score: {f1Score:.2f}")
 
 # Calculate Root Mean Squared Error (RMSE)
-rmse = np.sqrt(mse)
-print(f"Root Mean Squared Error: {rmse:.2f}")
+report = classification_report(y_test, y_pred)
 
 # Save the best model
 

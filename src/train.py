@@ -2,11 +2,9 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 import joblib
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-import numpy as np
-
+import mlflow
 # Load dataset
 data = pd.read_csv('data/car_evaluation.csv', header=None);
 data[0].replace(['vhigh', 'high','med','low'], [3, 2, 1, 0], inplace=True)
@@ -20,31 +18,38 @@ X = data.iloc[:, :-1]
 y = data.iloc[:, -1]
 # Split dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
+mlflow.set_experiment("Random forest car evaluation")
+with mlflow.start_run():
 # Train a model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+    n_estimators = 95
+    random_state = 40
+    mlflow.log_param("n_estimators", n_estimators)
+    mlflow.log_param("random_state", random_state)
+    model = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
+    model.fit(X_train, y_train)
+    # Evaluate the model
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Model accuracy: {accuracy:.2f}")
+    precision = precision_score(y_test, y_pred, average='micro')
+    print(f"Precision Score: {precision:.2f}")
 
-# Evaluate the model
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Model accuracy: {accuracy:.2f}")
+    # Calculate Mean Absolute Error (MAE)
+    recall = recall_score(y_test, y_pred, average='micro')
+    print(f"Recall score: {recall:.2f}")
 
-r2 = r2_score(y_test, y_pred)
-print(f"R² Score: {r2:.2f}")
+    # Calculate Mean Squared Error (MSE)
+    f1Score = f1_score(y_test, y_pred, average='micro')
+    print(f"F1 score: {f1Score:.2f}")
 
-# Calculate Mean Absolute Error (MAE)
-mae = mean_absolute_error(y_test, y_pred)
-print(f"Mean Absolute Error: {mae:.2f}")
+    # Calculate Root Mean Squared Error (RMSE)
+    report = classification_report(y_test, y_pred)
 
-# Calculate Mean Squared Error (MSE)
-mse = mean_squared_error(y_test, y_pred)
-print(f"Mean Squared Error: {mse:.2f}")
-
-# Calculate Root Mean Squared Error (RMSE)
-rmse = np.sqrt(mse)
-print(f"Root Mean Squared Error: {rmse:.2f}")
-
-# Save the trained model
-joblib.dump(model, 'model/model.joblib')
-print("Model saved as 'model.joblib'")
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.log_metric("precision", precision)
+    mlflow.log_metric("recall", recall)
+    mlflow.log_metric("f1score", f1Score)
+    mlflow.sklearn.log_model(model, "rf_default_for_cars")
+    # Save the trained model
+    joblib.dump(model, 'model/model.joblib')
+    print("Model saved as 'model.joblib'")
