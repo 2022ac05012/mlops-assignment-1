@@ -6,3 +6,4 @@ flask
 pytest
 flake8
 autopep8
+mlflow
