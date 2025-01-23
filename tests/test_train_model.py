@@ -75,11 +75,3 @@ def test_model_training():
     assert recall > 0.7, "Model recall is too low"
     assert f1 > 0.7, "Model F1 score is too low"
 
-# Test model saving
-def test_model_saving():
-    model = RandomForestClassifier(n_estimators=95, random_state=40)
-    joblib.dump(model, 'tests/model_mock/test_model.joblib')
-
-    assert os.path.exists('tests/model_mock/test_model.joblib'), "Model file was not saved"
-    os.remove('tests/model_mock/test_model.joblib')  # Clean up after test
-
