@@ -4,11 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 import joblib
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-import numpy as np
 import mlflow
-import mlflow.sklearn
-
 # Load dataset
 data = pd.read_csv('data/car_evaluation.csv', header=None);
 data[0].replace(['vhigh', 'high','med','low'], [3, 2, 1, 0], inplace=True)
@@ -31,12 +27,10 @@ with mlflow.start_run():
     mlflow.log_param("random_state", random_state)
     model = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
     model.fit(X_train, y_train)
-
     # Evaluate the model
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     print(f"Model accuracy: {accuracy:.2f}")
-
     precision = precision_score(y_test, y_pred, average='micro')
     print(f"Precision Score: {precision:.2f}")
 
