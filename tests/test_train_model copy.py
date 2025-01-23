@@ -78,8 +78,8 @@ def test_model_training():
 # Test model saving
 def test_model_saving():
     model = RandomForestClassifier(n_estimators=95, random_state=40)
-    joblib.dump(model, 'model_mock/test_model.joblib')
+    joblib.dump(model, 'model/test_model.joblib')
 
-    assert os.path.exists('model_mock/test_model.joblib'), "Model file was not saved"
-    os.remove('model_mock/test_model.joblib')  # Clean up after test
+    assert os.path.exists('model/test_model.joblib'), "Model file was not saved"
+    os.remove('model/test_model.joblib')  # Clean up after test
 
