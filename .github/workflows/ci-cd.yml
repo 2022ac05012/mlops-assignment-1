@@ -1,0 +1,68 @@
+name: ML Project CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  linting:
+    name: Lint Code
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install Dependencies
+        run: pip install flake8
+
+      - name: Run Linter
+        run: flake8 src
+
+  testing:
+    name: Run Tests
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Tests
+        run: pytest tests
+
+  deployment:
+    name: Deploy Model
+    runs-on: macos-latest
+    needs: [linting, testing]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Deploy Model
+        run: |
+          echo "Deploying model..."
+          python src/train.py
+          echo "Model deployed!"
