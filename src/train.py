@@ -26,8 +26,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 mlflow.set_experiment("Random forest car evaluation final")
 with mlflow.start_run():
     # Train a model
-    n_estimators = 95
-    random_state = 40
+    n_estimators = 80
+    random_state = 42
     mlflow.log_param("n_estimators", n_estimators)
     mlflow.log_param("random_state", random_state)
     model = RandomForestClassifier(
